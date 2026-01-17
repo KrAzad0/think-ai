@@ -1,0 +1,29 @@
+title: think.ai
+description: A blog about quantum mechanics, quantum field theory, attosecond physics, and theoretical physics research
+author: KrAzad0
+baseurl: /think-ai
+url: https://krazad0.github.io
+
+# Theme
+theme: minima
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+# Blog settings
+show_excerpts: true
+paginate: 10
+
+# Social links
+github_username: KrAzad0
+
+# Build settings
+markdown: kramdown
+
+# Collections
+collections:
+  posts:
+    output: true
+    permalink: /blog/:year/:month/:day/:title/
