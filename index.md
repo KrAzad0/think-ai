@@ -11,22 +11,10 @@ title: think.ai - Quantum Physics Research Blog
       <p>Quantum Physics Research Blog</p>
       <h1>think.ai</h1>
       <p>Exploring the frontiers of theoretical physics — quantum mechanics, quantum field theory, attosecond physics, and mathematical methods.</p>
-      <a href="{{ "/blog/" | relative_url }}">Read the Blog</a>
+    
     </div>
   </section>
 
-  <!-- Research Focus -->
-  <section id="research-focus">
-    <h2>Research Focus</h2>
-    <ul>
-      <li><strong>Quantum Mechanics</strong>: Wave functions, operators, uncertainty, measurement, and structure of states.</li>
-      <li><strong>Quantum Field Theory</strong>: Path integrals, Feynman diagrams, quantization, and symmetry principles.</li>
-      <li><strong>Attosecond Physics</strong>: Ultrafast dynamics, strong-field interaction, and time-resolved spectroscopy.</li>
-      <li><strong>Mathematical Physics</strong>: Symmetries, group theory, geometric methods, and functional analysis tools.</li>
-      <li><strong>Computational Physics</strong>: Numerical methods, simulations, and reproducible computational notebooks.</li>
-      <li><strong>Research Notes</strong>: Derivations, structured reading notes, and clean LaTeX-ready writeups.</li>
-    </ul>
-  </section>
 
   <!-- Latest Posts -->
   <section id="latest-posts">
