@@ -6,7 +6,7 @@ title: think.ai - Quantum Physics Research Blog
 <main class="page">
 
   <!-- HERO / INTRO -->
-  <section class="hero" style="background-image: url('{{ "/IMG_5335.jpeg" | relative_url }}'); background-size: cover; background-position: center; min-height: 70vh; display: flex; align-items: center; justify-content: center; text-align: center; color: white;">
+  <section class="hero" style="background-image: url('{{ "/IMG_5335.jpeg" | relative_url }}'); background-size: cover; background-position: center; min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; color: white;">
     <div>
       <p>Quantum Physics Research Blog</p>
       <h1>think.ai</h1>
