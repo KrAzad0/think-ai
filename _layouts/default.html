@@ -18,32 +18,26 @@
     const canvas = document.getElementById('equationCanvas');
     const ctx = canvas.getContext('2d');
     let width, height;
+
     const equations = [
-      'a^2 + b^2 = c^2',
-      '\\log(xy) = \\log x + \\log y',
-      '\\frac{df}{dt} = \\lim_{h \	o 0} \\frac{f(t+h) - f(t)}{h}',
-      'F = G\\frac{m_1 m_2}{d^2}',
-      'i^2 = -1',
+      'a² + b² = c²',
+      'log(xy) = log x + log y',
+      'df/dt = lim (f(t+h)-f(t))/h',
+      'F = G(m₁m₂)/d²',
+      'i² = -1',
       'F - E + V = 2',
-      '\\Phi(x) = \\frac{1}{\\sqrt{2\\pi\\sigma^2}}e^{-\\frac{(x-\\mu)^2}{2\\sigma^2}}',
-      '\\frac{\\partial^2 u}{\\partial t^2} = c^2 \\frac{\\partial^2 u}{\\partial x^2}',
-      '\\hat{f}(\\xi) = \\int_{-\\infty}^{\\infty} f(x) e^{-2\\pi i x \\xi} dx',
-      '\\rho\\left(\\frac{\\partial\\mathbf{v}}{\\partial t} + \\mathbf{v}\\cdot\
-abla\\mathbf{v}\\right) = -\
-abla p + \
-abla\\cdot\\mathbf{T} + \\mathbf{f}',
-      '\
-abla\\cdot\\mathbf{E} = 0', '\
-abla\\cdot\\mathbf{H} = 0',
-      '\
-abla\	imes\\mathbf{E} = -\\frac{1}{c}\\frac{\\partial\\mathbf{H}}{\\partial t}',
-      '\
-abla\	imes\\mathbf{H} = \\frac{1}{c}\\frac{\\partial\\mathbf{E}}{\\partial t}',
-      'dS \\ge 0', 'E = mc^2',
-      'i\\hbar\\frac{\\partial\\Psi}{\\partial t} = \\hat{H}\\Psi',
-      'H = -\\sum p(x)\\log p(x)',
-      'x_{t+1} = k x_t(1 - x_t)',
-      '\\frac{1}{2}\\sigma^2 S^2 \\frac{\\partial^2 V}{\\partial S^2} + rS\\frac{\\partial V}{\\partial S} + \\frac{\\partial V}{\\partial t} - rV = 0'
+      'Φ(x) = (1/√(2πσ²))e^-(x-μ)²/2σ²',
+      '∂²u/∂t² = c² ∂²u/∂x²',
+      'f̂(ξ) = ∫ f(x)e^(-2πixξ)dx',
+      'ρ(∂v/∂t + v·∇v) = -∇p + ∇·T + f',
+      '∇·E = 0', '∇·H = 0',
+      '∇×E = -1/c ∂H/∂t',
+      '∇×H = 1/c ∂E/∂t',
+      'dS ≥ 0', 'E = mc²',
+      'iℏ ∂Ψ/∂t = ĤΨ',
+      'H = -Σ p(x)log p(x)',
+      'xₜ₊₁ = k xₜ(1 - xₜ)',
+      '½σ²S² ∂²V/∂S² + rS ∂V/∂S + ∂V/∂t - rV = 0'
     ];
 
     function resize() {
@@ -53,33 +47,32 @@ abla\	imes\\mathbf{H} = \\frac{1}{c}\\frac{\\partial\\mathbf{E}}{\\partial t}',
     window.addEventListener('resize', resize);
     resize();
 
-    const particles = [];
     class Particle {
       constructor() {
         this.reset();
       }
       reset() {
         this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.vx = (Math.random() - 0.5) * 0.5;
-        this.vy = (Math.random() - 0.5) * 0.5;
-        this.opacity = Math.random() * 0.5 + 0.1;
+        this.y = Math.random() * height;Polish equation particles and update layout structure
+        this.vx = (Math.random() - 0.5) * 0.3;
+        this.vy = (Math.random() - 0.5) * 0.3;
+        this.opacity = Math.random() * 0.4 + 0.1;
         this.text = equations[Math.floor(Math.random() * equations.length)];
-        this.fontSize = Math.floor(Math.random() * 10 + 12);
+        this.fontSize = Math.floor(Math.random() * 8 + 14);
       }
       update() {
         this.x += this.vx;
         this.y += this.vy;
-        if (this.x < -100 || this.x > width + 100 || this.y < -100 || this.y > height + 100) this.reset();
+        if (this.x < -200 || this.x > width + 200 || this.y < -200 || this.y > height + 200) this.reset();
       }
       draw() {
         ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-        ctx.font = `${this.fontSize}px serif`;
+        ctx.font = `${this.fontSize}px "Courier New", Courier, monospace`;
         ctx.fillText(this.text, this.x, this.y);
       }
     }
 
-    for (let i = 0; i < 40; i++) particles.push(new Particle());
+    const particles = Array.from({ length: 50 }, () => new Particle());
 
     function animate() {
       ctx.clearRect(0, 0, width, height);
