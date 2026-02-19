@@ -3,39 +3,73 @@
 
 @import "{{ site.theme }}";
 
-// Custom background image for physics equations
-.home {
-  background-image: url('/think-ai/IMG_5335.jpeg');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #050505;
+  color: #e0e0e0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  overflow-x: hidden;
 }
 
-// Add subtle overlay to improve text readability
-.home::before {
-  content: "";
+#equationCanvas {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.15);
-  z-index: -1;
+  z-index: 0;
+  pointer-events: none;
 }
 
-// Ensure content is readable on the background
-.page-content {
+.content-wrapper {
   position: relative;
   z-index: 1;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 80px 20px;
+  background: transparent;
+}
+
+.home {
+  text-align: center;
+}
+
+.page-heading {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #fff 0%, #aaa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+h1, h2, h3 {
+  color: #fff;
+}
+
+a {
+  color: #ff3344;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: #ff6677;
 }
 
 .site-header {
-  background-color: rgba(255, 255, 255, 0.95);
+  background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.site-footer {
-  background-color: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
+.post-link {
+  font-size: 1.5rem;
+  display: block;
+  margin-top: 20px;
+}
+
+.post-meta {
+  font-size: 0.9rem;
+  color: #888;
 }
