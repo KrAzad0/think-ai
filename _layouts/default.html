@@ -4,34 +4,92 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  
   <title>{% if page.title %}{{ page.title | escape }}{% else %}{{ site.title | escape }}{% endif %}</title>
-  
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
-  
-  <!-- MathJax for LaTeX rendering -->
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  
-  <script>
-  window.MathJax = {
-    tex: {
-      inlineMath: [['$', '$'], ['\\(', '\\)']],
-      displayMath: [['$$', '$$'], ['\\[', '\\]']],
-      processEscapes: true,
-      processEnvironments: true
-    },
-    options: {
-      ignoreHtmlClass: 'tex2jax_ignore',
-      processHtmlClass: 'tex2jax_process'
-    }
-  };
-  </script>
-  
-  {% feed_meta %}
-  {% seo %}
 </head>
 <body>
-  {{ content }}
+  <canvas id="equationCanvas"></canvas>
+  <div class="content-wrapper">
+    {{ content }}
+  </div>
+  <script>
+    const canvas = document.getElementById('equationCanvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    const equations = [
+      'a^2 + b^2 = c^2',
+      '\\log(xy) = \\log x + \\log y',
+      '\\frac{df}{dt} = \\lim_{h \	o 0} \\frac{f(t+h) - f(t)}{h}',
+      'F = G\\frac{m_1 m_2}{d^2}',
+      'i^2 = -1',
+      'F - E + V = 2',
+      '\\Phi(x) = \\frac{1}{\\sqrt{2\\pi\\sigma^2}}e^{-\\frac{(x-\\mu)^2}{2\\sigma^2}}',
+      '\\frac{\\partial^2 u}{\\partial t^2} = c^2 \\frac{\\partial^2 u}{\\partial x^2}',
+      '\\hat{f}(\\xi) = \\int_{-\\infty}^{\\infty} f(x) e^{-2\\pi i x \\xi} dx',
+      '\\rho\\left(\\frac{\\partial\\mathbf{v}}{\\partial t} + \\mathbf{v}\\cdot\
+abla\\mathbf{v}\\right) = -\
+abla p + \
+abla\\cdot\\mathbf{T} + \\mathbf{f}',
+      '\
+abla\\cdot\\mathbf{E} = 0', '\
+abla\\cdot\\mathbf{H} = 0',
+      '\
+abla\	imes\\mathbf{E} = -\\frac{1}{c}\\frac{\\partial\\mathbf{H}}{\\partial t}',
+      '\
+abla\	imes\\mathbf{H} = \\frac{1}{c}\\frac{\\partial\\mathbf{E}}{\\partial t}',
+      'dS \\ge 0', 'E = mc^2',
+      'i\\hbar\\frac{\\partial\\Psi}{\\partial t} = \\hat{H}\\Psi',
+      'H = -\\sum p(x)\\log p(x)',
+      'x_{t+1} = k x_t(1 - x_t)',
+      '\\frac{1}{2}\\sigma^2 S^2 \\frac{\\partial^2 V}{\\partial S^2} + rS\\frac{\\partial V}{\\partial S} + \\frac{\\partial V}{\\partial t} - rV = 0'
+    ];
+
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const particles = [];
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.vx = (Math.random() - 0.5) * 0.5;
+        this.vy = (Math.random() - 0.5) * 0.5;
+        this.opacity = Math.random() * 0.5 + 0.1;
+        this.text = equations[Math.floor(Math.random() * equations.length)];
+        this.fontSize = Math.floor(Math.random() * 10 + 12);
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < -100 || this.x > width + 100 || this.y < -100 || this.y > height + 100) this.reset();
+      }
+      draw() {
+        ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+        ctx.font = `${this.fontSize}px serif`;
+        ctx.fillText(this.text, this.x, this.y);
+      }
+    }
+
+    for (let i = 0; i < 40; i++) particles.push(new Particle());
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
 </body>
 </html>
