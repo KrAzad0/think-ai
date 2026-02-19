@@ -6,8 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% if page.title %}{{ page.title | escape }}{% else %}{{ site.title | escape }}{% endif %}</title>
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
   <canvas id="equationCanvas"></canvas>
@@ -19,25 +17,25 @@
     const ctx = canvas.getContext('2d');
     let width, height;
 
+    // High-fidelity LaTeX-style strings for the canvas
     const equations = [
       'a² + b² = c²',
-      'log(xy) = log x + log y',
-      'df/dt = lim (f(t+h)-f(t))/h',
-      'F = G(m₁m₂)/d²',
+      'log(xy) = log(x) + log(y)',
+      'df/dt = lim_{h→0} [f(t+h) - f(t)]/h',
+      'F = G(m₁m₂)/r²',
       'i² = -1',
       'F - E + V = 2',
-      'Φ(x) = (1/√(2πσ²))e^-(x-μ)²/2σ²',
+      'P(x) = [1/σ√(2π)] e^-(x-μ)²/2σ²',
       '∂²u/∂t² = c² ∂²u/∂x²',
-      'f̂(ξ) = ∫ f(x)e^(-2πixξ)dx',
-      'ρ(∂v/∂t + v·∇v) = -∇p + ∇·T + f',
-      '∇·E = 0', '∇·H = 0',
-      '∇×E = -1/c ∂H/∂t',
-      '∇×H = 1/c ∂E/∂t',
-      'dS ≥ 0', 'E = mc²',
-      'iℏ ∂Ψ/∂t = ĤΨ',
-      'H = -Σ p(x)log p(x)',
-      'xₜ₊₁ = k xₜ(1 - xₜ)',
-      '½σ²S² ∂²V/∂S² + rS ∂V/∂S + ∂V/∂t - rV = 0'
+      'f̂(ξ) = ∫_{-∞}^{∞} f(x) e^{-2πixξ} dx',
+      'ρ(∂v/∂t + v·∇v) = -∇p + μ∇²v + f',
+      '∇·E = 4πρ', '∇·B = 0',
+      '∇×E = -∂B/∂t', '∇×B = μ₀J + μ₀ε₀∂E/∂t',
+      'dS ≥ dQ/T', 'E = mc²',
+      'iℏ ∂Ψ/∂t = [-ℏ²/2m ∇² + V]Ψ',
+      'H = -∑ pᵢ log(pᵢ)',
+      'x_{n+1} = r xₙ(1 - xₙ)',
+      '∂V/∂t + ½σ²S² ∂²V/∂S² + rS ∂V/∂S - rV = 0'
     ];
 
     function resize() {
@@ -53,26 +51,29 @@
       }
       reset() {
         this.x = Math.random() * width;
-        this.y = Math.random() * height;Polish equation particles and update layout structure
-        this.vx = (Math.random() - 0.5) * 0.3;
-        this.vy = (Math.random() - 0.5) * 0.3;
-        this.opacity = Math.random() * 0.4 + 0.1;
+        this.y = Math.random() * height;
+        this.vx = (Math.random() - 0.5) * 0.2;
+        this.vy = (Math.random() - 0.5) * 0.2;
+        this.opacity = 0;
+        this.maxOpacity = Math.random() * 0.3 + 0.05;
+        this.fadeSpeed = Math.random() * 0.005 + 0.002;
         this.text = equations[Math.floor(Math.random() * equations.length)];
-        this.fontSize = Math.floor(Math.random() * 8 + 14);
+        this.fontSize = Math.floor(Math.random() * 6 + 13);
       }
       update() {
         this.x += this.vx;
         this.y += this.vy;
-        if (this.x < -200 || this.x > width + 200 || this.y < -200 || this.y > height + 200) this.reset();
+        if (this.opacity < this.maxOpacity) this.opacity += this.fadeSpeed;
+        if (this.x < -300 || this.x > width + 300 || this.y < -300 || this.y > height + 300) this.reset();
       }
       draw() {
         ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-        ctx.font = `${this.fontSize}px "Courier New", Courier, monospace`;
+        ctx.font = `${this.fontSize}px "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace`;
         ctx.fillText(this.text, this.x, this.y);
       }
     }
 
-    const particles = Array.from({ length: 50 }, () => new Particle());
+    const particles = Array.from({ length: 45 }, () => new Particle());
 
     function animate() {
       ctx.clearRect(0, 0, width, height);
