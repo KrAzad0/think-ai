@@ -3,26 +3,16 @@ layout: default
 title: think.ai - Quantum Physics Research Blog
 ---
 
-<main class="page">
+<div class="home">
+  <p class="post-meta">Quantum Physics Research Blog</p>
+  <h1 class="page-heading">think.ai</h1>
+  <p>Exploring the frontiers of theoretical physics — quantum mechanics, quantum field theory, attosecond physics, and mathematical methods.</p>
 
-  <!-- HERO / INTRO -->
-  <section class="hero" style="background-image: url('{{ "/IMG_5335.jpeg" | relative_url }}'); background-size: cover; background-position: center; min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; color: white;">
-    <div>
-      <p>Quantum Physics Research Blog</p>
-      <h1>think.ai</h1>
-      <p>Exploring the frontiers of theoretical physics — quantum mechanics, quantum field theory, attosecond physics, and mathematical methods.</p>
-    
-    </div>
-  </section>
-
-
-  <!-- Latest Posts -->
-  <section id="latest-posts">
+  <section id="latest-posts" style="margin-top: 60px;">
     <h2>Latest Posts</h2>
-    <p>Check out the latest research notes and insights below.</p>
+    <p class="post-meta">Check out the latest research notes and insights below.</p>
     {% for post in site.posts limit: 6 %}
-      <a href="{{ post.url | relative_url }}">{{ post.title }}</a><br>
+      <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title }}</a>
     {% endfor %}
   </section>
-
-</main>
+</div>
