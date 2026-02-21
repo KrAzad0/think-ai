@@ -14,5 +14,6 @@ title: think.ai - Quantum Physics Research Blog
     {% for post in site.posts limit: 6 %}
       <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title }}</a>
     {% endfor %}
+            <a class="post-link" href="{{ '/equations' | relative_url }}">Showcase of Fundamental Equations</a>
   </section>
 </div>
