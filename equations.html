@@ -21,7 +21,7 @@ title: Fundamental Equations of Physics
   }
   .equations-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
     gap: 30px;
     padding: 20px 0;
   }
@@ -29,11 +29,16 @@ title: Fundamental Equations of Physics
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 20px;
-    padding: 30px;
+    padding: 30px 24px;
     text-align: center;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
-    overflow: hidden;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 160px;
   }
   .equation-card::before {
     content: '';
@@ -45,6 +50,7 @@ title: Fundamental Equations of Physics
     background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
     opacity: 0;
     transition: opacity 0.4s;
+    pointer-events: none;
   }
   .equation-card:hover {
     transform: translateY(-10px) scale(1.02);
@@ -60,14 +66,29 @@ title: Fundamental Equations of Physics
     text-transform: uppercase;
     font-size: 0.75rem;
     letter-spacing: 2px;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     display: block;
     font-weight: 700;
   }
   .equation-content {
-    font-size: 1.6rem;
+    font-size: 1.35rem;
     color: #fff;
-    margin: 20px 0;
+    margin: 10px 0 0 0;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: visible;
+    padding-bottom: 4px;
+  }
+  .equation-content .MathJax {
+    max-width: 100%;
+  }
+  @media (max-width: 480px) {
+    .equations-grid {
+      grid-template-columns: 1fr;
+    }
+    .equation-content {
+      font-size: 1.1rem;
+    }
   }
 </style>
 
@@ -81,71 +102,82 @@ title: Fundamental Equations of Physics
     <span class="card-label">Pythagorean Theorem</span>
     <div class="equation-content">$$a^2 + b^2 = c^2$$</div>
   </div>
+
   <div class="equation-card">
     <span class="card-label">Logarithms</span>
     <div class="equation-content">$$\log(xy) = \log x + \log y$$</div>
   </div>
+
   <div class="equation-card">
     <span class="card-label">Derivative Definition</span>
-    <div class="equation-content">$$\frac{df}{dt} = \lim_{h 	o 0} \frac{f(t+h) - f(t)}{h}$$</div>
+    <div class="equation-content">$$\frac{df}{dt} = \lim_{h \to 0} \frac{f(t+h) - f(t)}{h}$$</div>
   </div>
+
   <div class="equation-card">
     <span class="card-label">Law of Gravity</span>
     <div class="equation-content">$$F = G \frac{m_1 m_2}{d^2}$$</div>
   </div>
+
   <div class="equation-card">
     <span class="card-label">Imaginary Unit</span>
     <div class="equation-content">$$i^2 = -1$$</div>
   </div>
+
   <div class="equation-card">
     <span class="card-label">Euler's Polyhedron</span>
     <div class="equation-content">$$F - E + V = 2$$</div>
   </div>
+
   <div class="equation-card">
     <span class="card-label">Normal Distribution</span>
-    <div class="equation-content">$$\Phi(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}$$</div>
+    <div class="equation-content">$$\Phi(x) = \frac{1}{\sqrt{2\pi\sigma^2}}\, e^{-\frac{(x-\mu)^2}{2\sigma^2}}$$</div>
   </div>
+
   <div class="equation-card">
     <span class="card-label">Wave Equation</span>
     <div class="equation-content">$$\frac{\partial^2 u}{\partial t^2} = c^2 \frac{\partial^2 u}{\partial x^2}$$</div>
   </div>
+
   <div class="equation-card">
     <span class="card-label">Fourier Transform</span>
-    <div class="equation-content">$$\hat{f}(\xi) = \int_{-\infty}^{\infty} f(x) e^{-2\pi i x \xi} \, dx$$</div>
+    <div class="equation-content">$$\hat{f}(\xi) = \int_{-\infty}^{\infty} f(x)\, e^{-2\pi i x \xi}\, dx$$</div>
   </div>
+
   <div class="equation-card">
     <span class="card-label">Navier-Stokes</span>
-    <div class="equation-content">$$\rho \left( \frac{\partial \mathbf{v}}{\partial t} + \mathbf{v} \cdot 
-abla \mathbf{v} \right) = -
-abla p + \mu 
-abla^2 \mathbf{v} + \mathbf{f}$$</div>
+    <div class="equation-content">$$\rho \left(\frac{\partial \mathbf{v}}{\partial t} + \mathbf{v} \cdot \nabla \mathbf{v}\right) = -\nabla p + \mu\,\nabla^2 \mathbf{v} + \mathbf{f}$$</div>
   </div>
+
   <div class="equation-card">
     <span class="card-label">Maxwell's Equations</span>
-    <div class="equation-content">$$
-abla \cdot \mathbf{E} = \frac{\rho}{\epsilon_0}, \quad 
-abla \cdot \mathbf{B} = 0$$</div>
+    <div class="equation-content">$$\nabla \cdot \mathbf{E} = \frac{\rho}{\epsilon_0}, \quad \nabla \cdot \mathbf{B} = 0$$</div>
   </div>
+
   <div class="equation-card">
     <span class="card-label">Entropy</span>
     <div class="equation-content">$$S = k \log W$$</div>
   </div>
+
   <div class="equation-card">
     <span class="card-label">Einstein's Energy</span>
     <div class="equation-content">$$E = mc^2$$</div>
   </div>
+
   <div class="equation-card">
-    <span class="card-label">Schrödinger Equation</span>
+    <span class="card-label">Schr&#246;dinger Equation</span>
     <div class="equation-content">$$i\hbar \frac{\partial \Psi}{\partial t} = \hat{H} \Psi$$</div>
   </div>
+
   <div class="equation-card">
     <span class="card-label">Information Entropy</span>
     <div class="equation-content">$$H = -\sum p_i \log p_i$$</div>
   </div>
+
   <div class="equation-card">
     <span class="card-label">Logistic Map</span>
-    <div class="equation-content">$$x_{n+1} = r x_n(1 - x_n)$$</div>
+    <div class="equation-content">$$x_{n+1} = r\, x_n(1 - x_n)$$</div>
   </div>
+
   <div class="equation-card">
     <span class="card-label">Black-Scholes</span>
     <div class="equation-content">$$\frac{\partial V}{\partial t} + \frac{1}{2}\sigma^2 S^2 \frac{\partial^2 V}{\partial S^2} + rS \frac{\partial V}{\partial S} - rV = 0$$</div>
