@@ -6,36 +6,79 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% if page.title %}{{ page.title | escape }}{% else %}{{ site.title | escape }}{% endif %}</title>
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters:[{left:'$$', right:'$$', display:true}, {left:'$', right:'$', inline:true}, {left:'\\(', right:'\\)', inline:true}, {left:'\\[', right:'\\]', display:true}]});"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0a0a0c;
+      color: #e0e0e0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+    #equationCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0c 100%);
+    }
+    .content-wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 1000px;
+      margin: 60px auto;
+      padding: 40px;
+      background: rgba(15, 15, 25, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    }
+    .katex-display {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 20px;
+      border-radius: 12px;
+      border-left: 4px solid #00d4ff;
+      margin: 25px 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .katex-display:hover {
+      transform: translateY(-5px) scale(1.01);
+      background: rgba(255, 255, 255, 0.06);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+  </style>
 </head>
 <body>
   <canvas id="equationCanvas"></canvas>
   <div class="content-wrapper">
     {{ content }}
   </div>
+
   <script>
     const canvas = document.getElementById('equationCanvas');
     const ctx = canvas.getContext('2d');
     let width, height;
 
-    // High-fidelity LaTeX-style strings for the canvas
     const equations = [
       'a² + b² = c²',
-      'log(xy) = log(x) + log(y)',
-      'df/dt = lim_{h→0} [f(t+h) - f(t)]/h',
+      'E = mc²',
       'F = G(m₁m₂)/r²',
       'i² = -1',
+      '∇·E = ρ/ε₀',
+      '∇×B = μ₀J + μ₀ε₀∂E/∂t',
+      'iℏ ∂ψ/∂t = Ĥψ',
+      'S = k log W',
+      'Rμν - ½Rgμν = 8πGTμν',
+      'PV = nRT',
+      'λ = h/p',
       'F - E + V = 2',
-      'P(x) = [1/σ√(2π)] e^-(x-μ)²/2σ²',
-      '∂²u/∂t² = c² ∂²u/∂x²',
-      'f̂(ξ) = ∫_{-∞}^{∞} f(x) e^{-2πixξ} dx',
-      'ρ(∂v/∂t + v·∇v) = -∇p + μ∇²v + f',
-      '∇·E = 4πρ', '∇·B = 0',
-      '∇×E = -∂B/∂t', '∇×B = μ₀J + μ₀ε₀∂E/∂t',
-      'dS ≥ dQ/T', 'E = mc²',
-      'iℏ ∂Ψ/∂t = [-ℏ²/2m ∇² + V]Ψ',
-      'H = -∑ pᵢ log(pᵢ)',
-      'x_{n+1} = r xₙ(1 - xₙ)',
-      '∂V/∂t + ½σ²S² ∂²V/∂S² + rS ∂V/∂S - rV = 0'
+      'e^iπ + 1 = 0'
     ];
 
     function resize() {
@@ -52,28 +95,45 @@
       reset() {
         this.x = Math.random() * width;
         this.y = Math.random() * height;
-        this.vx = (Math.random() - 0.5) * 0.2;
-        this.vy = (Math.random() - 0.5) * 0.2;
-        this.opacity = 0;
-        this.maxOpacity = Math.random() * 0.3 + 0.05;
-        this.fadeSpeed = Math.random() * 0.005 + 0.002;
+        this.vx = (Math.random() - 0.5) * 0.3;
+        this.vy = (Math.random() - 0.5) * 0.3;
         this.text = equations[Math.floor(Math.random() * equations.length)];
-        this.fontSize = Math.floor(Math.random() * 6 + 13);
+        this.opacity = 0;
+        this.maxOpacity = Math.random() * 0.4 + 0.1;
+        this.fadeSpeed = Math.random() * 0.005 + 0.002;
+        this.fontSize = Math.floor(Math.random() * 8 + 12);
+        this.shapeSize = this.text.length * (this.fontSize * 0.6) + 30;
       }
       update() {
         this.x += this.vx;
         this.y += this.vy;
         if (this.opacity < this.maxOpacity) this.opacity += this.fadeSpeed;
-        if (this.x < -300 || this.x > width + 300 || this.y < -300 || this.y > height + 300) this.reset();
+        
+        if (this.x < -this.shapeSize || this.x > width + this.shapeSize || 
+            this.y < -this.shapeSize || this.y > height + this.shapeSize) {
+          this.reset();
+        }
       }
       draw() {
-        ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-        ctx.font = `${this.fontSize}px "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace`;
+        ctx.save();
+        ctx.globalAlpha = this.opacity;
+        
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.shapeSize / 2, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(0, 212, 255, 0.3)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        
+        ctx.font = `${this.fontSize}px 'Courier New', monospace`;
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
         ctx.fillText(this.text, this.x, this.y);
+        ctx.restore();
       }
     }
 
-    const particles = Array.from({ length: 45 }, () => new Particle());
+    const particles = Array.from({ length: 30 }, () => new Particle());
 
     function animate() {
       ctx.clearRect(0, 0, width, height);
