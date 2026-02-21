@@ -12,7 +12,6 @@ title: think.ai - Quantum Physics Research Blog
     <h2>Latest Posts</h2>
     <p class="post-meta">Check out the latest research notes and insights below.</p>
     {% for post in site.posts limit: 6 %}
-<a class="post-link" href="{{ '/equations' | relative_url }}">Showcase of Fundamental Equations</a>
       <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title }}</a>
     {% endfor %}
   </section>
