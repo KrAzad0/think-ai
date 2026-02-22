@@ -8,12 +8,12 @@
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters:[{left:'$$', right:'$$', display:true}, {left:'$', right:'$', inline:true}, {left:'\\(', right:'\\)', inline:true}, {left:'\\[', right:'\\]', display:true}]});"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters:[{left:'$$', right:'$$', display:true},{left:'$', right:'$', inline:true},{left:'\\(', right:'\\)', inline:true},{left:'\\[', right:'\\]', display:true}]});"></script>
   <style>
     body {
       margin: 0;
       padding: 0;
-      background-color: #0a0a0c;
+      background-color: #05050f;
       color: #e0e0e0;
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     }
@@ -24,7 +24,6 @@
       width: 100%;
       height: 100%;
       z-index: -1;
-      background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0c 100%);
     }
     .content-wrapper {
       position: relative;
@@ -32,12 +31,12 @@
       max-width: 1000px;
       margin: 60px auto;
       padding: 40px;
-      background: rgba(15, 15, 25, 0.7);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(10, 10, 22, 0.75);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       border-radius: 24px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(0, 200, 255, 0.04);
     }
     .katex-display {
       background: rgba(255, 255, 255, 0.03);
@@ -59,88 +58,166 @@
   <div class="content-wrapper">
     {{ content }}
   </div>
-
   <script>
     const canvas = document.getElementById('equationCanvas');
     const ctx = canvas.getContext('2d');
     let width, height;
 
-    const equations = [
-      'a² + b² = c²',
-      'E = mc²',
-      'F = G(m₁m₂)/r²',
-      'i² = -1',
-      '∇·E = ρ/ε₀',
-      '∇×B = μ₀J + μ₀ε₀∂E/∂t',
-      'iℏ ∂ψ/∂t = Ĥψ',
-      'S = k log W',
-      'Rμν - ½Rgμν = 8πGTμν',
-      'PV = nRT',
-      'λ = h/p',
-      'F - E + V = 2',
-      'e^iπ + 1 = 0'
+    // Equation categories with colour themes
+    const equationData = [
+      // Quantum Mechanics - cyan
+      { text: 'iℏ ∂ψ/∂t = Ĥψ',          color: '#00d4ff' },
+      { text: 'Δx Δp ≥ ℏ/2',            color: '#00d4ff' },
+      { text: '[x̂, p̂] = iℏ',             color: '#00d4ff' },
+      { text: 'P = |⟨φ|ψ⟩|²',           color: '#00d4ff' },
+      { text: 'ψ(x,t) = Ae^{i(kx-ωt)}', color: '#00d4ff' },
+      // Relativity - violet
+      { text: 'E = mc²',                color: '#b06aff' },
+      { text: 'Rμν - ½Rgμν = 8πGTμν', color: '#b06aff' },
+      { text: 'ds² = -c²dt² + dx²',    color: '#b06aff' },
+      { text: 'γ = 1/√(1-v²/c²)',       color: '#b06aff' },
+      { text: 'L = -mc²/γ',            color: '#b06aff' },
+      // Electromagnetism - gold
+      { text: '∇·E = ρ/ε₀',              color: '#ffd166' },
+      { text: '∇×B = μ₀J + μ₀ε₀∂E/∂t', color: '#ffd166' },
+      { text: '∇·B = 0',                color: '#ffd166' },
+      { text: '∇×E = -∂B/∂t',          color: '#ffd166' },
+      { text: 'F = q(E + v×B)',         color: '#ffd166' },
+      // Thermodynamics - red-orange
+      { text: 'S = kᵇ log W',           color: '#ff6b6b' },
+      { text: 'dU = TdS - PdV',        color: '#ff6b6b' },
+      { text: 'PV = nRT',              color: '#ff6b6b' },
+      { text: 'ΔG = ΔH - TΔS',          color: '#ff6b6b' },
+      // Mathematics - green
+      { text: 'e^{iπ} + 1 = 0',         color: '#06d6a0' },
+      { text: 'a² + b² = c²',           color: '#06d6a0' },
+      { text: 'ζ(s) = Σ n^{-s}',         color: '#06d6a0' },
+      { text: '∇²f = ∂²f/∂x² + ∂²f/∂y²',  color: '#06d6a0' },
+      { text: 'F - E + V = 2',         color: '#06d6a0' },
+      // Wave & Classical - pink
+      { text: 'λ = h/p',                color: '#ff9ef5' },
+      { text: '∂²u/∂t² = c²∇²u',      color: '#ff9ef5' },
+      { text: 'F = -kx',              color: '#ff9ef5' },
+      { text: 'L = T - V',            color: '#ff9ef5' },
     ];
 
     function resize() {
-      width = canvas.width = window.innerWidth;
+      width  = canvas.width  = window.innerWidth;
       height = canvas.height = window.innerHeight;
     }
     window.addEventListener('resize', resize);
     resize();
 
-    class Particle {
-      constructor() {
-        this.reset();
+    // Draw the background gradient once per frame
+    function drawBackground() {
+      // Deep-space base
+      const bg = ctx.createRadialGradient(width*0.5, height*0.5, 0, width*0.5, height*0.5, Math.max(width, height)*0.75);
+      bg.addColorStop(0,   '#0d0d2b');
+      bg.addColorStop(0.5, '#08081a');
+      bg.addColorStop(1,   '#05050f');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, width, height);
+
+      // Subtle nebula blobs
+      const nebulae = [
+        { x: 0.15, y: 0.2,  r: 0.35, color: 'rgba(0,80,180,0.07)'   },
+        { x: 0.85, y: 0.75, r: 0.30, color: 'rgba(120,0,180,0.06)'  },
+        { x: 0.5,  y: 0.55, r: 0.25, color: 'rgba(0,160,200,0.05)'  },
+        { x: 0.75, y: 0.15, r: 0.28, color: 'rgba(60,0,140,0.05)'   },
+      ];
+      nebulae.forEach(n => {
+        const rg = ctx.createRadialGradient(n.x*width, n.y*height, 0, n.x*width, n.y*height, n.r*Math.max(width,height));
+        rg.addColorStop(0,   n.color);
+        rg.addColorStop(1,   'transparent');
+        ctx.fillStyle = rg;
+        ctx.fillRect(0, 0, width, height);
+      });
+    }
+
+    class Equation {
+      constructor() { this.init(true); }
+
+      init(randomY = false) {
+        const d        = equationData[Math.floor(Math.random() * equationData.length)];
+        this.text      = d.text;
+        this.baseColor = d.color;
+        // depth: 0 = far (small, dim)  1 = near (large, bright)
+        this.depth     = Math.random();
+        this.fontSize  = 10 + this.depth * 14;          // 10–24 px
+        this.maxOpacity= 0.08 + this.depth * 0.30;      // 0.08–0.38
+        this.opacity   = 0;
+        this.fadeSpeed = 0.002 + Math.random() * 0.004;
+        this.fadingOut = false;
+        this.life      = 0;
+        this.maxLife   = 280 + Math.random() * 400;
+        const speed    = 0.08 + this.depth * 0.25;
+        const angle    = Math.random() * Math.PI * 2;
+        this.vx        = Math.cos(angle) * speed;
+        this.vy        = Math.sin(angle) * speed;
+        this.x         = Math.random() * width;
+        this.y         = randomY ? Math.random() * height : (Math.random() < 0.5 ? -30 : height + 30);
+        this.rotation  = (Math.random() - 0.5) * 0.3;   // slight tilt
+        this.vr        = (Math.random() - 0.5) * 0.0008;
       }
-      reset() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.vx = (Math.random() - 0.5) * 0.3;
-        this.vy = (Math.random() - 0.5) * 0.3;
-        this.text = equations[Math.floor(Math.random() * equations.length)];
-        this.opacity = 0;
-        this.maxOpacity = Math.random() * 0.4 + 0.1;
-        this.fadeSpeed = Math.random() * 0.005 + 0.002;
-        this.fontSize = Math.floor(Math.random() * 8 + 12);
-        this.shapeSize = this.text.length * (this.fontSize * 0.6) + 30;
-      }
+
       update() {
+        this.life++;
         this.x += this.vx;
         this.y += this.vy;
-        if (this.opacity < this.maxOpacity) this.opacity += this.fadeSpeed;
-        
-        if (this.x < -this.shapeSize || this.x > width + this.shapeSize || 
-            this.y < -this.shapeSize || this.y > height + this.shapeSize) {
-          this.reset();
+        this.rotation += this.vr;
+
+        if (this.life > this.maxLife * 0.75) this.fadingOut = true;
+        if (!this.fadingOut && this.opacity < this.maxOpacity) this.opacity = Math.min(this.opacity + this.fadeSpeed, this.maxOpacity);
+        if (this.fadingOut) this.opacity -= this.fadeSpeed * 1.5;
+
+        if (this.opacity <= 0 || this.x < -300 || this.x > width+300 || this.y < -100 || this.y > height+100) {
+          this.init(false);
         }
       }
+
       draw() {
         ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rotation);
         ctx.globalAlpha = this.opacity;
-        
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.shapeSize / 2, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(0, 212, 255, 0.3)';
-        ctx.lineWidth = 1;
-        ctx.stroke();
-        
-        ctx.font = `${this.fontSize}px 'Courier New', monospace`;
-        ctx.fillStyle = '#ffffff';
-        ctx.textAlign = 'center';
+        ctx.font = `${this.fontSize}px 'Courier New', 'Lucida Console', monospace`;
+        ctx.textAlign  = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(this.text, this.x, this.y);
+
+        // Glow effect for brighter equations
+        if (this.depth > 0.6) {
+          ctx.shadowColor = this.baseColor;
+          ctx.shadowBlur  = 12 * this.depth;
+        }
+
+        ctx.fillStyle = this.baseColor;
+        ctx.fillText(this.text, 0, 0);
+
+        // Subtle underline for near equations
+        if (this.depth > 0.7) {
+          const w = ctx.measureText(this.text).width;
+          ctx.beginPath();
+          ctx.moveTo(-w/2, this.fontSize * 0.7);
+          ctx.lineTo( w/2, this.fontSize * 0.7);
+          ctx.strokeStyle = this.baseColor;
+          ctx.globalAlpha = this.opacity * 0.3;
+          ctx.lineWidth   = 0.5;
+          ctx.stroke();
+        }
+
         ctx.restore();
       }
     }
 
-    const particles = Array.from({ length: 30 }, () => new Particle());
+    const PARTICLE_COUNT = 45;
+    const particles = Array.from({ length: PARTICLE_COUNT }, () => new Equation());
 
     function animate() {
       ctx.clearRect(0, 0, width, height);
-      particles.forEach(p => {
-        p.update();
-        p.draw();
-      });
+      drawBackground();
+      // Draw far-depth first, then near (painter's algorithm)
+      const sorted = particles.slice().sort((a, b) => a.depth - b.depth);
+      sorted.forEach(p => { p.update(); p.draw(); });
       requestAnimationFrame(animate);
     }
     animate();
